@@ -4,11 +4,12 @@
 {% block title %}{% endblock title %}
 
 {% block hero_subheader %}
-    <div class="jumbotron">
+    <div id="jumbotron" class="jumbotron">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-md-offset-2">
-                    <img src="{{STATIC_URL}}img/codalab-logo-onecolor-reverse.png" alt="CodaLab" class="img-responsive">
+                    <img src="{{ STATIC_URL }}img/codalab-logo-onecolor-reverse.png" alt="CodaLab"
+                         class="img-responsive">
                 </div>
             </div>
         </div>
@@ -18,6 +19,29 @@
 {% block content %}
 
     <div class="container">
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div style="margin-top: 15px;" class="well">
+                    <h1>Dear Codalab users,</h1>
+                    <p>
+                        Following a major crash of our system, we restored Codalab from an older backup. Some
+                        competitions and some user accounts could not be restored. Competition organizers may have had
+                        to reload your competition under another number. Please check the competition list to find your
+                        competition. You may have to re-register and re-enter your last submission(s). We sincerely apologize for the trouble.
+                        We are putting in place better backup and recovery procedures so this problem will not recur.
+                        To help build our community we created this
+                        <a href="https://groups.google.com/forum/#!forum/codalab-competitions">Google group</a>, please join!
+                    </p>
+                    <p>We sincerely apologize for the inconvenience.</p>
+                    <p>Best regards,</p>
+
+                    <p>&mdash; The Codalab team</p>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
 
         <div class="row">
           <div class="col-sm-6 competition-latest-list">
@@ -31,54 +55,68 @@
             {% endif %}
           </div>
             <div class="col-sm-6 competition-latest-list">
-            <h2 class="homepage_headers">Featured Competitions</h2>
-            {% if not featured_competitions %}
-            <p><em>There are no competitions.</em></p>
-            {% else %}
-                {% for competition in featured_competitions %}
-                    {% include "web/competition_latest.html" with competition=competition %}
-                {% endfor %}
-            {% endif %}
-          </div>
+                <h2 class="homepage_headers">Featured Competitions</h2>
+                {% if not featured_competitions %}
+                    <p><em>There are no competitions.</em></p>
+                {% else %}
+                    {% for competition in featured_competitions %}
+                        {% include "web/competition_latest.html" with competition=competition %}
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
     </div>
+
+    <style>
+        #topleft_menu {
+            height: 48px !important;
+        }
+
+        #topleft_menu > .left.item {
+            left: 0;
+            position: absolute;
+        }
+
+    </style>
 {% endblock content %}
 <script>
-{% block js %}
-    $(function () {
-        $(".top-bar-section ul > li").removeClass("active");
-    });
-
-    function populate(frm, data) {
-        $.each(data, function(key, value){
-            var $ctrl = $('[name='+key+']', frm);
-            switch($ctrl.attr("type"))
-            {
-                case "text":
-                case "hidden":
-                    $ctrl.val(value);
-                    break;
-                case "radio":
-                case "checkbox":
-                    $ctrl.each(function(){
-                        if(value=='on') {
-                            $(this).attr("checked",value);
-                        }
-                    });
-                    break;
-                default:
-                    $ctrl.val(value);
-            }
+    {% block js %}
+        $(function () {
+            $(".top-bar-section ul > li").removeClass("active");
         });
-    }
-    $('.competition-tile').on('click',function(){
-        var competitionID = $(this).find('#competitionID').val();
-        window.location.href = '/competitions/' + competitionID;
-    });
 
-    var params = {}
-    location.search.substr(1).split("&").forEach(function(item) {params[item.split("=")[0]] = item.split("=")[1]})
+        function populate(frm, data) {
+            $.each(data, function (key, value) {
+                var $ctrl = $('[name=' + key + ']', frm);
+                switch ($ctrl.attr("type")) {
+                    case "text":
+                    case "hidden":
+                        $ctrl.val(value);
+                        break;
+                    case "radio":
+                    case "checkbox":
+                        $ctrl.each(function () {
+                            if (value == 'on') {
+                                $(this).attr("checked", value);
+                            }
+                        });
+                        break;
+                    default:
+                        $ctrl.val(value);
+                }
+            });
+        }
+        $('.competition-tile').on('click', function () {
+            var competitionID = $(this).find('#competitionID').val();
+            window.location.href = '/competitions/' + competitionID;
+        });
 
-    populate('#search_form', params);
-{% endblock js %}
+
+        var params = {}
+        location.search.substr(1).split("&").forEach(function (item) {
+            params[item.split("=")[0]] = item.split("=")[1]
+        })
+
+        populate('#search_form', params);
+    {% endblock js %}
 </script>
